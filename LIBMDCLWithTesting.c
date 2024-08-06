@@ -47,41 +47,41 @@ Examples: (Note that CreateList must always be used first and DeleteList must AL
 
 struct Node  				// the struct containing all the information a Node will store
 {
-	void* data;				// dynamically allocated variable to store strings
+	void* data;			// dynamically allocated variable to store strings
 	int position;			// node position in list
 	struct Node* next;		// the next node in list 0 being all the way at the left, next would point to 1 on the right, if tail node, this node will point to head
 	struct Node* prev;		// the previous node in the list. If this node is the head node, it will point to the tail
 };
 
-struct NodeManager  		// this is the wrapper for all nodes in an instance of NodeManager. Each array of nodes (Determined at list creation) is managed through this
+struct NodeManager  			// this is the wrapper for all nodes in an instance of NodeManager. Each array of nodes (Determined at list creation) is managed through this
 {
 	char ListID[30];		// used to Identify the specific list
 	int NodeCount;			// the amount of nodes to be created by the create list function
 	struct Node* head;		// should always point to the 0 index of the node array
 	struct Node* tail;		// should always point to the last index of the node array
-	struct Node* NodeArray;	// this is a pointer to the node array for this instance of NodeManager
+	struct Node* NodeArray;		// this is a pointer to the node array for this instance of NodeManager
 };
 
 
 /* Function Prototypes */
 
-struct NodeManager* CreateList		(int NodeCount, const char* ListID);					// creates a list (an instance of NodeManager) with the specified amount of nodes
-struct Node* InsertNodeAtEnd		(struct NodeManager*);									// inserts a node at the end of the list (to the right), this becomes the tail
-struct Node* InsertNodeAtBeginning	(struct NodeManager*);									// inserts a node at the beginning of the list (to the left), this becomes the head
-struct Node* InsertNodeAtPosition	(struct NodeManager*, int position);					// inserts a node at a given position which corrosponds to the node's index
-bool DeleteList						(struct NodeManager*);									// deletes a given list and returns whether the operaiton was successful or not
-bool DeleteNodeAtEnd				(struct NodeManager*);									// deletes the tail and returns whether the operaiton was successful or not
-bool DeleteNodeAtBeginning			(struct NodeManager*);									// deletes the head and returns whether the operaiton was successful or not
-bool DeleteNodeAtPosition			(struct NodeManager*, int position);					// deletes a node at a specific node and returns the success of the operation
-bool SetNodeData					(struct NodeManager*, int position, void* data);		// sets the char data of a node at the specified position for the given list
-bool EmptyNodeData					(struct NodeManager*, int position);					// sets the char data of a given node to 0s for the given list
+struct NodeManager* CreateList		(int NodeCount, const char* ListID);			// creates a list (an instance of NodeManager) with the specified amount of nodes
+struct Node* InsertNodeAtEnd		(struct NodeManager*);					// inserts a node at the end of the list (to the right), this becomes the tail
+struct Node* InsertNodeAtBeginning	(struct NodeManager*);					// inserts a node at the beginning of the list (to the left), this becomes the head
+struct Node* InsertNodeAtPosition	(struct NodeManager*, int position);			// inserts a node at a given position which corrosponds to the node's index
+bool DeleteList				(struct NodeManager*);					// deletes a given list and returns whether the operaiton was successful or not
+bool DeleteNodeAtEnd			(struct NodeManager*);					// deletes the tail and returns whether the operaiton was successful or not
+bool DeleteNodeAtBeginning		(struct NodeManager*);					// deletes the head and returns whether the operaiton was successful or not
+bool DeleteNodeAtPosition		(struct NodeManager*, int position);			// deletes a node at a specific node and returns the success of the operation
+bool SetNodeData			(struct NodeManager*, int position, void* data);	// sets the char data of a node at the specified position for the given list
+bool EmptyNodeData			(struct NodeManager*, int position);			// sets the char data of a given node to 0s for the given list
 
 /* Functions */
 
 struct NodeManager* CreateList(int NodeCount, const char* ListID)
 {
 	// error checking node count
-	if (NodeCount <= 0) // this is <= 0 and not just <0 because of how calloc works when allocating memory
+	if (NodeCount <= 0) 							// this is <= 0 and not just <0 because of how calloc works when allocating memory
 	{
 		fprintf(stderr, "\nInvalid NodeCount\n");
 		return NULL;
@@ -98,7 +98,7 @@ struct NodeManager* CreateList(int NodeCount, const char* ListID)
 	}
 
 	// creating array of struct nodes
-	struct Node* NodeArray = calloc(NodeCount, sizeof(struct Node));		// allocating memory for our array of nodes on the heap
+	struct Node* NodeArray = calloc(NodeCount, sizeof(struct Node));	// allocating memory for our array of nodes on the heap
 
 	// error checking NodeArray
 	if (NodeArray == NULL)
@@ -109,8 +109,8 @@ struct NodeManager* CreateList(int NodeCount, const char* ListID)
 	}
 
 	// initializing NodeManager variables
-	strncpy(manager->ListID, ListID, sizeof(manager->ListID) - 1); // copying the passed in list id to the variable in the nodemanager instance
-	manager->ListID[sizeof(manager->ListID) - 1] = '\0'; // ensuring there is a null terminator at the end of ListID
+	strncpy(manager->ListID, ListID, sizeof(manager->ListID) - 1);	// copying the passed in list id to the variable in the nodemanager instance
+	manager->ListID[sizeof(manager->ListID) - 1] = '\0'; 		// ensuring there is a null terminator at the end of ListID
 	manager->NodeCount = NodeCount;
 	manager->head = &NodeArray[0];
 	manager->tail = &NodeArray[NodeCount - 1];
@@ -119,12 +119,12 @@ struct NodeManager* CreateList(int NodeCount, const char* ListID)
 	// initializing array of nodes/setting links
 	for (int i = 0; i < NodeCount; i++)
 	{
-		if (i == 0) // if the current node in the loop is the head node
+		if (i == 0) 						// if the current node in the loop is the head node
 		{
 			NodeArray[i].prev = &NodeArray[NodeCount - 1];
 			NodeArray[i].next = &NodeArray[i + 1];
 		}
-		else if (i == NodeCount - 1) // if the current node in the loop is the tail node
+		else if (i == NodeCount - 1) 				// if the current node in the loop is the tail node
 		{
 			NodeArray[i].prev = &NodeArray[i - 1];
 			NodeArray[i].next = &NodeArray[0];
@@ -139,11 +139,11 @@ struct NodeManager* CreateList(int NodeCount, const char* ListID)
 	}
 
 
-	return manager; // returns a pointer to the manager struct which contains the needed information to deal with the list
+	return manager;							// returns a pointer to the manager struct which contains the needed information to deal with the list
 }
 
 
-struct Node* InsertNodeAtEnd(struct NodeManager* NodeManager) // Realloc for expanding, do error checking
+struct Node* InsertNodeAtEnd(struct NodeManager* NodeManager) 		// Realloc for expanding, do error checking
 {
 	// error checking passed in NodeManager pointer
 	if (NodeManager == NULL)
@@ -178,20 +178,20 @@ struct Node* InsertNodeAtEnd(struct NodeManager* NodeManager) // Realloc for exp
 	for (int i = NodeCount - 1; i >= 0; i--)
 	{
 
-		if (i == 0) // updating head node
+		if (i == 0)						// updating head node
 		{
 			
 			NodeArray[i].position = 0;
 			NodeArray[i].prev = &NodeArray[NodeCount - 1];
 			NodeArray[i].next = &NodeArray[i + 1];
 		}
-		else if (i == NodeCount - 1) // creating our new node
+		else if (i == NodeCount - 1)				// creating our new node
 		{
 			NodeArray[i].next = &NodeArray[0];
 			NodeArray[i].prev = &NodeArray[i - 1];
 			NodeArray[i].position = i;
 		}
-		else // updating all other nodes
+		else 							// updating all other nodes
 		{	
 			NodeArray[i].next = &NodeArray[i + 1];
 			NodeArray[i].prev = &NodeArray[i - 1];
@@ -421,19 +421,19 @@ bool DeleteNodeAtEnd(struct NodeManager* NodeManager)
 	for (int i = NodeCount - 1; i >= 0; i--)
 	{
 
-		if (i == 0) // updating head node
+		if (i == 0)						// updating head node
 		{
 			NodeArray[i].prev = &NodeArray[NodeCount - 1];
 			NodeArray[i].next = &NodeArray[i + 1];
 		}
-		else if (i == NodeCount - 1) // setting the new tail node
+		else if (i == NodeCount - 1)				// setting the new tail node
 		{
 			NodeArray[i].next = &NodeArray[0];
 			NodeArray[i].prev = &NodeArray[i - 1];
 			NodeArray[i].position = i;
 			NodeManager->tail = &NodeArray[i];
 		}
-		else // updating all other nodes
+		else							// updating all other nodes
 		{
 			NodeArray[i].next = &NodeArray[i + 1];
 			NodeArray[i].prev = &NodeArray[i - 1];
@@ -485,7 +485,7 @@ bool DeleteNodeAtBeginning(struct NodeManager* NodeManager)
 	for (int i = NodeCount - 1; i >= 0; i--)
 	{
 
-		if (i == 0) // updating head node
+		if (i == 0)						// updating head node
 		{
 			
 			NodeArray[i].position = 0;
@@ -494,14 +494,14 @@ bool DeleteNodeAtBeginning(struct NodeManager* NodeManager)
 			NodeManager->head = &NodeArray[i];
 
 		}
-		else if (i == NodeCount - 1) // setting the new tail node
+		else if (i == NodeCount - 1)				// setting the new tail node
 		{
 			NodeArray[i].next = &NodeArray[0];
 			NodeArray[i].prev = &NodeArray[i - 1];
 			NodeArray[i].position = i;
 			NodeManager->tail = &NodeArray[i];
 		}
-		else // updating all other nodes
+		else							// updating all other nodes
 		{
 			NodeArray[i].next = &NodeArray[i + 1];
 			NodeArray[i].prev = &NodeArray[i - 1];
@@ -571,7 +571,7 @@ bool DeleteNodeAtPosition(struct NodeManager* NodeManager, int position)
 	for (int i = NodeCount - 1; i >= 0; i--)
 	{
 
-		if (i == 0) // updating head node
+		if (i == 0)						// updating head node
 		{
 			
 			NodeArray[i].position = 0;
@@ -580,14 +580,14 @@ bool DeleteNodeAtPosition(struct NodeManager* NodeManager, int position)
 			NodeManager->head = &NodeArray[i];
 
 		}
-		else if (i == NodeCount - 1) // setting the new tail node
+		else if (i == NodeCount - 1)				// setting the new tail node
 		{
 			NodeArray[i].next = &NodeArray[0];
 			NodeArray[i].prev = &NodeArray[i - 1];
 			NodeArray[i].position = i;
 			NodeManager->tail = &NodeArray[i];
 		}
-		else // updating all other nodes
+		else							// updating all other nodes
 		{
 			NodeArray[i].next = &NodeArray[i + 1];
 			NodeArray[i].prev = &NodeArray[i - 1];
