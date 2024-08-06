@@ -47,7 +47,7 @@ Examples: (Note that CreateList must always be used first and DeleteList must AL
 
 struct Node  				// the struct containing all the information a Node will store
 {
-	void* data;	// dynamically allocated variable to store strings
+	void* data;				// dynamically allocated variable to store strings
 	int position;			//  node position in list
 	struct Node* next;		// the next node in list 0 being all the way at the left, next would point to 1 on the right, if tail node, this node will point to head
 	struct Node* prev;		// the previous node in the list. If this node is the head node, it will point to the tail
